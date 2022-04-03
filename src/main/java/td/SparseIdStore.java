@@ -22,7 +22,6 @@ public final class SparseIdStore {
     }
 
     public long size() {
-        // TODO
         return 0L;
     }
 
