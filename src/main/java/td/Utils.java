@@ -60,10 +60,6 @@ public class Utils {
         return newVals;
     }
 
-    /**
-     * @param alpha Pareto index value. 80–20 (4:1) rule corresponds to α = log(5)/log(4) ≈ 1.16,
-     *        90–10 (9:1) corresponds to α = log(10)/log(9) ≈ 1.05
-     */
     public static long getParetoRandom(@Nonnull final Random rnd, final float p, final long max) {
         if (p <= 0 || p >= 1.0) {
             throw new IllegalArgumentException();
