@@ -1,7 +1,7 @@
-# td-misc
+# misc_java
 
 ```bash
-git clone https://github.com/myui/td-misc.git
+git clone https://github.com/myui/misc_java.git
 ./gradlew
 ./gradlew test
 ```
