@@ -13,6 +13,7 @@ import java.util.function.LongConsumer;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 public final class SparseBitset {
@@ -65,14 +66,13 @@ public final class SparseBitset {
         if (result.isPresent()) {
             Container container = result.get();
             container.set(pos);
-            if (container.type() == ContaineType.bitset && container.size() >= conversionThreshold) {
-                logger.info("converded to array container at partition: " + partition);
-                Container newContainer = new ArrayContainer(container.indicies());
+            if (container.type() == ContaineType.array && container.size() >= conversionThreshold) {
+                logger.info("converded to bitset container at partition: " + partition);
+                Container newContainer = new BitsetContainer(container.indicies());
                 this.containers = arraySet(containers, partition, newContainer);
             }
         } else {
-            Container container = new BitsetContainer();
-            container.set(pos);
+            Container container = new ArrayContainer(pos);
             this.containers = arraySet(containers, partition, container);
         }
     }
@@ -128,10 +128,13 @@ public final class SparseBitset {
     static final class BitsetContainer implements Container {
 
         @Nonnull
-        private final BitSet elements;
+        private final BitSet set;
 
-        BitsetContainer() {
-            this.elements = new BitSet();
+        BitsetContainer(@Nonnull int[] elements) {
+            this.set = new BitSet();
+            for (int i : elements) {
+                set.set(i);
+            }
         }
 
         @Override
@@ -141,43 +144,48 @@ public final class SparseBitset {
 
         @Override
         public boolean set(final int index) {
-            if (elements.get(index)) {
+            if (set.get(index)) {
                 return true;
             } else {
-                elements.set(index);
+                set.set(index);
                 return false;
             }
         }
 
         @Override
         public boolean get(final int index) {
-            return elements.get(index);
+            return set.get(index);
         }
 
         @Override
         public int size() {
-            return elements.cardinality();
+            return set.cardinality();
         }
 
         @Override
         public int[] indicies() {
-            return elements.stream().toArray();
+            return set.stream().toArray();
         }
 
         @Override
         public IntStream stream() {
-            return elements.stream();
+            return set.stream();
         }
 
     }
 
     static final class ArrayContainer implements Container {
+        private final int INITIAL_SIZE = 128;
 
         @Nonnull
         private int[] elements;
+        @Nonnegative
+        private int size;
 
-        ArrayContainer(@Nonnull int[] elememts) {
-            this.elements = elememts;
+        ArrayContainer(@Nonnull int element) {
+            this.elements = new int[INITIAL_SIZE];
+            elements[0] = element;
+            this.size = 1;
         }
 
         @Override
@@ -187,32 +195,33 @@ public final class SparseBitset {
 
         @Override
         public boolean set(final int element) {
-            final int index = Arrays.binarySearch(elements, element);
+            final int index = Arrays.binarySearch(elements, 0, size, element);
             if (index >= 0) {// skip if already set
                 return true;
             }
             this.elements = insert(elements, ~index, element);
+            this.size += 1;
             return false;
         }
 
         @Override
         public boolean get(final int element) {
-            return Arrays.binarySearch(elements, element) < 0;
+            return Arrays.binarySearch(elements, 0, size, element) < 0;
         }
 
         @Override
         public int size() {
-            return elements.length;
+            return size;
         }
 
         @Override
         public int[] indicies() {
-            return elements;
+            return Arrays.copyOf(elements, size);
         }
 
         @Override
         public IntStream stream() {
-            return IntStream.of(elements);
+            return IntStream.of(indicies());
         }
 
     }
