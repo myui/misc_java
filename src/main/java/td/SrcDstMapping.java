@@ -50,7 +50,7 @@ public class SrcDstMapping {
                 values = new ArrayList<>();
                 result.put(src, values);
             }
-            if (!values.contains(dst)) {
+            if (!values.contains(dst)) {//TODO what if values became large
                 values.add(dst);
             }
         }
