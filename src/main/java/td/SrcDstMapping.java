@@ -3,6 +3,7 @@ package td;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,32 +38,15 @@ public class SrcDstMapping {
 
     @Nonnull
     public Map<Integer, List<Integer>> getMapping(@Nonnull List<List<Integer>> list) {
-        Map<Integer, List<Integer>> result = new HashMap<>();
-
-        for (List<Integer> e : list) {
-            assert (e.size() == 2);
-
-            Integer src = e.get(0);
-            Integer dst = e.get(1);
-
-            List<Integer> values = result.get(src);
-            if (values == null) {
-                values = new ArrayList<>();
-                result.put(src, values);
-            }
-            if (!values.contains(dst)) {//TODO what if values became large
-                values.add(dst);
-            }
-        }
-
-        return result;
+        return Collections.emptyMap();
     }
 
     public static void main(String[] args) {
         List<List<Integer>> input = asList(asList(3, 2), asList(1, 3), asList(3, 0), asList(1, 3));
         SrcDstMapping solution = new SrcDstMapping();
         Map<Integer, List<Integer>> result = solution.getMapping(input);
-        System.out.println(result);
+        System.out.println("Expected: {1=[3], 3=[0, 2]}");
+        System.out.println("Actual  : " + result);
     }
 
 
