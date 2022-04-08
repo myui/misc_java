@@ -69,7 +69,9 @@ public class MergeSortedStreams implements SortedIntegerStream {
         while(merged.hasNext()) {
             result.add(merged.getNext());            
         }
-        System.out.println(result);
+        System.out.println("expected: [1, 3, 3, 4, 5, 5, 5, 6, 6, 7, 8, 9, 11]");
+        System.out.println("actual  : " + result);
+        
     }
 
 }
