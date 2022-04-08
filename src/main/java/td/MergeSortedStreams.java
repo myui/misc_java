@@ -1,6 +1,8 @@
 package td;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import javax.annotation.Nonnull;
@@ -28,6 +30,19 @@ public class MergeSortedStreams implements SortedIntegerStream {
     public int getNext() throws IndexOutOfBoundsException {
         // TODO implement this
         return 0;
+    }
+    
+    
+    public static void main(String[] args) {
+        SortedIntegerStream stream1 = new IntArrayStream(1,3,5,6,6,9);
+        SortedIntegerStream stream2 = new IntArrayStream(3,4,5,5,7,8,11);
+        SortedIntegerStream merged = new MergeSortedStreams(stream1, stream2);
+        
+        List<Integer> result = new ArrayList<>();
+        while(merged.hasNext()) {
+            result.add(merged.getNext());            
+        }
+        System.out.println(result);
     }
 
 }
