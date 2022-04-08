@@ -1,10 +1,12 @@
 package leetcode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * You are given the heads of two sorted linked lists list1 and list2.
  * 
- * Input: list1 = [1,2,4], list2 = [1,3,4]
- * Output: [1,1,2,3,4,4]
+ * Input: list1 = [1,2,4], list2 = [1,3,4] Output: [1,1,2,3,4,4]
  * 
  * 
  * {@link https://leetcode.com/problems/merge-two-sorted-lists/}
@@ -27,7 +29,7 @@ public class MergeTwoSortedLists {
         }
     }
 
-    public class ListNode {
+    public static class ListNode {
         int val;
         ListNode next;
 
@@ -41,6 +43,21 @@ public class MergeTwoSortedLists {
             this.val = val;
             this.next = next;
         }
+    }
+
+    public static void main(String[] args) {
+        ListNode list1 = new ListNode(1, new ListNode(2, new ListNode(4)));
+        ListNode list2 = new ListNode(1, new ListNode(3, new ListNode(4)));
+        MergeTwoSortedLists solution = new MergeTwoSortedLists();
+        final ListNode merged = solution.mergeTwoLists(list1, list2);
+
+        List<Integer> result = new ArrayList<>();
+        ListNode curr = merged;
+        do {
+            result.add(curr.val);
+        } while ((curr = curr.next) != null);
+
+        System.out.println(result.toString());
     }
 
 }
